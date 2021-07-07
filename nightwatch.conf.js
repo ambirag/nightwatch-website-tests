@@ -21,8 +21,8 @@ module.exports = {
   globals_path: '',
 
   webdriver: {
-    start_process: true,
-    port: 4444,
+    start_process: false,
+    port: 443,
     server_path: Services.geckodriver ? Services.geckodriver.path : '',
     cli_args: [
       // very verbose geckodriver logs
@@ -46,7 +46,7 @@ module.exports = {
       },
 
       webdriver: {
-        start_process: true,
+        start_process: false,
         server_path: Services.geckodriver ? Services.geckodriver.path : '',
       },
 
@@ -192,8 +192,10 @@ module.exports = {
     selenium: {
       // Selenium Server is running locally and is managed by Nightwatch
       selenium: {
-        start_process: true,
-        port: 4444,
+        start_process: false,
+        port: 443,
+        host: `${process.env.gridhost}`,
+        use_ssl: true,
         server_path: Services.seleniumServer ? Services.seleniumServer.path : '',
         cli_args: {
           'webdriver.gecko.driver': Services.geckodriver ? Services.geckodriver.path : '',
@@ -210,6 +212,14 @@ module.exports = {
           w3c: false,
         },
       },
+    },
+    "selenium.edge": {
+      extends: 'selenium',
+      desiredCapabilities: {
+        browserName: "MicrosoftEdge",
+        platformName: "LINUX",
+        w3c: "true"
+      }
     },
 
     'selenium.firefox': {
@@ -229,7 +239,7 @@ module.exports = {
 
 function loadServices() {
   try {
-    Services.seleniumServer = require('selenium-server');
+    Services.seleniumServer = require('selenium-webdriver');
   } catch (err) {}
 
   try {
